@@ -47,7 +47,8 @@ def similar_1(vc_fund_code_1,vc_fund_code_2,l_date=str(dt.date.today().strftime(
     stock_2['SHARE_PCT_VALUE']=stock_2[stock_2['VC_STOCKTYPE_NAME']=="股票"]['CURRENCY_VALUE']/sum(stock_2[stock_2['VC_STOCKTYPE_NAME']=="股票"]['CURRENCY_VALUE'])
     
     #取两只产品重复的持仓，计算占股票市值比的较小值，再求和
-    test_merge=pd.merge(stock_1,stock_2,on=['WIND_CODE'],how='inner')
+    #合并时只合并股票
+    test_merge=pd.merge(stock_1[stock_1['VC_STOCKTYPE_NAME']=="股票"],stock_2[stock_2['VC_STOCKTYPE_NAME']=="股票"],on=['VC_REPORT_CODE'],how='inner')
     test_merge['PCT_MIN']=test_merge[['SHARE_PCT_VALUE_x','SHARE_PCT_VALUE_y']].min(axis=1)
     sml_1=sum(test_merge['PCT_MIN'])
     return sml_1
